@@ -5,7 +5,32 @@ const dataModal = $$("[data-modal]");
 const btnClose = $$("#btn-close");
 const modalBackdrop = $$(".modal-backdrop");
 
+
 function Modal() {
+  // hàm sử lý lấy ra kích thước cảu thanh cuộn
+  // kĩ thuậy Cache
+  function getScrollballWidth() {
+    if (getScrollballWidth.value) {
+      console.log("Giá trị thanh cuộn đã được lưu vào bộ nhớ");
+      return getScrollballWidth.value;
+    }
+
+    const div = document.createElement("div");
+    div.style.overflow = "scroll";
+    Object.assign(div.style, {
+      overflow: "scroll",
+      position: "absolute",
+      top: "-9999px",
+    });
+    document.body.appendChild(div);
+    const ScrollballWidth = div.offsetWidth - div.clientWidth;
+    document.body.removeChild(div);
+
+    getScrollballWidth.value = ScrollballWidth;
+
+    console.log(`Tinhs toán kích thước của thanh cuộn: ${ScrollballWidth}`);
+    return ScrollballWidth;
+  }
   this.openModal = (option = {}) => {
     const { templateId, modalElement = true } = option;
     const template = $(`#${templateId}`);
@@ -45,9 +70,9 @@ function Modal() {
     // lắng nghe sự kiện click
 
     setTimeout(() => {
-      modalBackdrop.classList.add("show"); 
+      modalBackdrop.classList.add("show");
     }, 0);
-    
+
     document.body.classList.add("croll-hidden");
     document.body.style.paddingRight = getScrollballWidth() + "px";
 
@@ -74,7 +99,7 @@ function Modal() {
   this.closeModal = (modalBackdrop) => {
     modalBackdrop.classList.remove("show");
     modalBackdrop.ontransitionend = function () {
-        modalBackdrop.remove();
+      modalBackdrop.remove();
     };
     document.body.classList.remove("croll-hidden");
     document.body.style.paddingRight = "";
@@ -110,19 +135,3 @@ btnModal2.onclick = function () {
     };
   }
 };
-
-function getScrollballWidth(){
-   const div = document.createElement("div");
-   div.style.overflow = "scroll";
-   Object.assign(div.style, {
-      overflow: "scroll",
-      position: "absolute",
-      top: "-9999px"
-   })
-   document.body.appendChild(div);
-   const ScrollballWidth = div.offsetWidth - div.clientWidth;
-   document.body.removeChild(div);
-   return ScrollballWidth;
-
-}
-getScrollballWidth();
