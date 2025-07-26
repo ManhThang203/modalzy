@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
+      integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="./assets/stylec.css" />
+  </head>
+  <body>
+    <main>
+      <button class="btn-modal" data-modal="#modal-1">Modal 1</button>
+      <button class="btn-modal" data-modal="#modal-2">Modal 2</button>
+      <button class="btn-modal" data-modal="#modal-3">Modal 3</button>
+    </main>
+
+    <!-- Modal 1-->
+    <div class="modal-backdrop" id="modal-1">
+      <div class="modal-container">
+        <button class="modal-close" id="btn-close">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="modal-content">
+          <p>modal 1</p>
+        </div>
+      </div>
+    </div>
+     <!-- Modal 2-->
+    <div class="modal-backdrop" id="modal-2">
+      <div class="modal-container">
+        <button class="modal-close" id="btn-close">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="modal-content">
+          <p>modal 2</p>
+        </div>
+      </div>
+    </div>
+     <!-- Modal 3-->
+    <div class="modal-backdrop" id="modal-3">
+      <div class="modal-container">
+        <button class="modal-close" id="btn-close">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="modal-content">
+          <p>modal 3</p>
+        </div>
+      </div>
+    </div>
+    <script src="./js/main.js"></script>
+  </body>
+</html>
