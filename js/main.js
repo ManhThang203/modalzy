@@ -45,9 +45,11 @@ function Modal() {
     // lắng nghe sự kiện click
 
     setTimeout(() => {
-      modalBackdrop.classList.add("show");
-      document.body.classList.add("croll-hidden");
-    }, 500);
+      modalBackdrop.classList.add("show"); 
+    }, 0);
+    
+    document.body.classList.add("croll-hidden");
+    document.body.style.paddingRight = getScrollballWidth() + "px";
 
     modalClose.onclick = () => {
       this.closeModal(modalBackdrop);
@@ -73,8 +75,9 @@ function Modal() {
     modalBackdrop.classList.remove("show");
     modalBackdrop.ontransitionend = function () {
         modalBackdrop.remove();
-        document.body.classList.remove("croll-hidden");
     };
+    document.body.classList.remove("croll-hidden");
+    document.body.style.paddingRight = "";
   };
 }
 
@@ -108,6 +111,18 @@ btnModal2.onclick = function () {
   }
 };
 
-// btnModal3.onclick = function(){
-//     modal.openModal("<h1>Manh Thang</h1>");
-// }
+function getScrollballWidth(){
+   const div = document.createElement("div");
+   div.style.overflow = "scroll";
+   Object.assign(div.style, {
+      overflow: "scroll",
+      position: "absolute",
+      top: "-9999px"
+   })
+   document.body.appendChild(div);
+   const ScrollballWidth = div.offsetWidth - div.clientWidth;
+   document.body.removeChild(div);
+   return ScrollballWidth;
+
+}
+getScrollballWidth();

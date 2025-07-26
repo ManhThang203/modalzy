@@ -78,3 +78,6 @@ button{
 .croll-hidden{
   overflow: hidden;
 }
+.wrapp-content{
+  text-align: center;
+}
