@@ -6,7 +6,16 @@ const btnClose = $$("#btn-close");
 const modalBackdrop = $$(".modal-backdrop");
 
 function Modal() {
-  this.openModal = (content) => {
+  this.openModal = (option = {}) => {
+    const {templateId} = option;
+    const template = $(`#${templateId}`);
+    
+    if(!template){
+        console.error(`${templateId} không tồn tại`);
+        return
+    }
+    const content  = template.content.cloneNode(true)
+
     // create element
     const modalBackdrop = document.createElement("div");
     modalBackdrop.className = "modal-backdrop";
@@ -26,7 +35,7 @@ function Modal() {
     const modalContent = document.createElement("div");
     modalContent.className = "modal-content";
 
-    modalContent.innerHTML = content;
+    modalContent.append(content);
 
     // Appent content and element
     modalContainer.append(modalClose, modalContent);
@@ -71,15 +80,17 @@ const btnModal2 = $("#modal-2");
 const btnModal3 = $("#modal-3");
 
 btnModal1.onclick = function(){
-    modal.openModal("<h1>Manh Thang</h1>");
+    modal.openModal({
+        templateId: "modal1"
+    });
 }
 
 
-btnModal2.onclick = function(){
-    modal.openModal("<h1>Manh Thang</h1>");
-}
+// btnModal2.onclick = function(){
+//     modal.openModal("<h1>Manh Thang</h1>");
+// }
 
 
-btnModal3.onclick = function(){
-    modal.openModal("<h1>Manh Thang</h1>");
-}
+// btnModal3.onclick = function(){
+//     modal.openModal("<h1>Manh Thang</h1>");
+// }
