@@ -36,7 +36,8 @@ button{
   background: rgba(0, 0, 0, 0.5);
   overflow: hidden;
   visibility: hidden;
-  transition:  all .4s ease;
+  transition:  opacity , visibility ease;
+  transition-duration: .4s;
 }
 .modal-backdrop.show{
     opacity: 1;
@@ -50,7 +51,7 @@ button{
   padding: 4rem 1.5rem;
   border-radius: 5px;
   transform: scale(0);
-  transition: all .4s ease;
+  transition: transform .4s ease;
 }
 .modal-backdrop.show .modal-container{
     transform: scale(1);
@@ -64,9 +65,11 @@ button{
   color: #666;
   font-size: 1.2rem;
   border-radius: 50%;
-  transition: all .3s ease;
+  transition: color , background ease;
+  transition-duration: .4s;
 }
-.modal-close:hover, .btn-modal:hover{
+.modal-close:hover, 
+.btn-modal:hover{
     color: #fff;
     background: orange;
 }

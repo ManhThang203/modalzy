@@ -8,11 +8,12 @@ const btnClose = $$("#btn-close");
 
 // hàm sử lý modal
 function Modal(option = {}) {
-
   const {
     templateId,
     destroyOnClose = true,
     cssClass = [],
+    onOpen,
+    onClose,
     methodModal = ["button", "orvelay", "escape"],
   } = option;
 
@@ -32,7 +33,6 @@ function Modal(option = {}) {
   function getScrollballWidth() {
     // do modalBackdrop cũng là 1 object lên cũng có thể chấm value để gán gia trị
     if (getScrollballWidth.value) {
-      console.log("Giá trị thanh cuộn đã được lưu vào bộ nhớ");
       return getScrollballWidth.value;
     }
 
@@ -49,7 +49,6 @@ function Modal(option = {}) {
 
     getScrollballWidth.value = ScrollballWidth;
 
-    console.log(`Tinhs toán kích thước của thanh cuộn: ${ScrollballWidth}`);
     return ScrollballWidth;
   }
   this._buile = () => {
@@ -83,13 +82,13 @@ function Modal(option = {}) {
     modalContent.className = "modal-content";
 
     cssClass.forEach((className) => {
-      if(typeof className === "string"){
-         modalContainer.classList.add(className);
+      if (typeof className === "string") {
+        modalContainer.classList.add(className);
       }
-    })
-    
+    });
+
     modalContent.append(content);
-  
+
     // Appent content and element
     modalContainer.append(modalContent);
     this._modalBackdrop.appendChild(modalContainer);
@@ -124,19 +123,27 @@ function Modal(option = {}) {
         }
       });
     }
+    this._modalBackdrop.ontransitionend = (e) => {
+      if (e.propertyName !== "transform") return;
+      if (typeof onOpen === "function") onOpen();
+    };
+
     return this._modalBackdrop;
   };
   // hàm sử lý đóng
   this.close = (destroy = destroyOnClose) => {
     this._modalBackdrop.classList.remove("show");
     // lắng nghe khi hết sự kiện transitionend thì remove ra khỏi Dom
-    this._modalBackdrop.addEventListener("transitionend", () => {
+    this._modalBackdrop.ontransitionend = (e) => {
+      if (e.propertyName !== "transform") return;
       // nếu this._modalBackdrop khác null / udf và và cho phép hủy thì mới hủy đi
-      if (this._modalBackdrop && destroy) {
-        this._modalBackdrop.remove();
-        this._modalBackdrop = null;
+      if (this._backdrop && destroy) {
+        this._backdrop.remove();
+        this._backdrop = null;
       }
-    });
+
+      if (typeof onClose === "function") onClose();
+    };
     document.body.classList.remove("croll-hidden");
     document.body.style.paddingRight = "";
   };
@@ -149,6 +156,12 @@ function Modal(option = {}) {
 const modal1 = new Modal({
   templateId: "modal1",
   destroyOnClose: false,
+  onOpen: () => {
+    console.log("Mddal 1 opened");
+  },
+  onClose: () => {
+    console.log("Modal 1 close");
+  },
 });
 
 const btnModal1 = $("#modal-1");
@@ -156,22 +169,18 @@ const btnModal2 = $("#modal-2");
 
 btnModal1.onclick = function () {
   modal1.open();
-
-  // modal1.close();
 };
 
 const modal2 = new Modal({
   templateId: "modal2",
   methodModal: ["button", "escape"],
-  // closeMethods: ['button','overlay','escape'],
-  // hiển thị footer của modal
   footer: true,
   cssClass: ["class1", "class2", "classN"],
   onOpen: () => {
-    console.log("Mddal opened");
+    console.log("Mddal 2 opened");
   },
-  onclose: () => {
-    console.log("Modal close");
+  onClose: () => {
+    console.log("Modal 2 close");
   },
 });
 
