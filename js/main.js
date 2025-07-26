@@ -106,23 +106,47 @@ function Modal() {
   };
 }
 
-const modal = new Modal();
+const modal1 = new Modal({
+    templateId: "modal1"
+});
 
 const btnModal1 = $("#modal-1");
 const btnModal2 = $("#modal-2");
-const btnModal3 = $("#modal-3");
+
 
 btnModal1.onclick = function () {
-  modal.openModal({
-    templateId: "modal1",
-  });
+  modal1.opend();
+
+  // modal1.close();
 };
 
-btnModal2.onclick = function () {
-  const modalBackdrop = modal.openModal({
+
+const modal2 = new Modal({
     templateId: "modal2",
-    modalElement: false,
-  });
+    // closeMethods: ['button','overlay','escape'],
+    // hiển thị footer của modal
+    footer: true,
+    cssClass: ['class1','class2','classN'],
+    onOpen: () => {
+        console.log("Mddal opened")
+    },
+    onclose: () => {
+        console.log("Modal close")
+    }
+});
+
+//  modal2.opend()
+//  modal2.close()
+// modal2.setFooterContent('HTML string')
+// modal2.addFooterContent('Canncel', 'class-1 class-2', (e) => {})
+// modal2.addFooterContent('Agree', 'class-3 class-4', (e) => {})
+// mdoal2.destroy();
+
+btnModal2.onclick = function () {
+  const modalBackdrop = modal2.opend();
+
+  // modal2.close();
+
   const form = modalBackdrop.querySelector("#login-form");
   if (form) {
     form.onsubmit = function (e) {
