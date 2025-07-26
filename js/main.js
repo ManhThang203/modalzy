@@ -8,7 +8,14 @@ const btnClose = $$("#btn-close");
 
 // hàm sử lý modal
 function Modal(option = {}) {
-  const { templateId, methodModal = ["button", "orvelay", "escape"] } = option;
+
+  const {
+    templateId,
+    destroyOnClose = true,
+    cssClass = [],
+    methodModal = ["button", "orvelay", "escape"],
+  } = option;
+
   const template = $(`#${templateId}`);
 
   if (!template) {
@@ -45,13 +52,13 @@ function Modal(option = {}) {
     console.log(`Tinhs toán kích thước của thanh cuộn: ${ScrollballWidth}`);
     return ScrollballWidth;
   }
-  this.open = () => {
+  this._buile = () => {
     const content = template.content.cloneNode(true);
 
     // create element
-    const modalBackdrop = document.createElement("div");
-    modalBackdrop.className = "modal-backdrop";
-    modalBackdrop.id = "modal-1";
+    this._modalBackdrop = document.createElement("div");
+    this._modalBackdrop.className = "modal-backdrop";
+    this._modalBackdrop.id = "modal-1";
 
     const modalContainer = document.createElement("div");
     modalContainer.className = "modal-container";
@@ -68,32 +75,44 @@ function Modal(option = {}) {
 
       // hàm sử lý xóa
       modalClose.onclick = () => {
-        this.close(modalBackdrop);
+        this.close();
       };
     }
     // tạo thẻ elemnt div content
     const modalContent = document.createElement("div");
     modalContent.className = "modal-content";
 
+    cssClass.forEach((className) => {
+      if(typeof className === "string"){
+         modalContainer.classList.add(className);
+      }
+    })
+    
     modalContent.append(content);
-
+  
     // Appent content and element
     modalContainer.append(modalContent);
-    modalBackdrop.appendChild(modalContainer);
-    document.body.appendChild(modalBackdrop);
+    this._modalBackdrop.appendChild(modalContainer);
+    document.body.appendChild(this._modalBackdrop);
+  };
 
-    // khi modalBackdrop được cho vào Dom thì sau khoản thời gian thì thêm class show vào
+  this.open = () => {
+    // nếu không có trong Dom
+    if (!this._modalBackdrop) {
+      this._buile();
+    }
+    // khi this._modalBackdrop được cho vào Dom thì sau khoản thời gian thì thêm class show vào
     setTimeout(() => {
-      modalBackdrop.classList.add("show");
+      this._modalBackdrop.classList.add("show");
     }, 0);
 
     document.body.classList.add("croll-hidden");
     document.body.style.paddingRight = getScrollballWidth() + "px";
     // nếu có Orvelay thì sử lý logic
     if (this._allowOrvelayClose) {
-      modalBackdrop.onclick = (e) => {
-        if (e.target === modalBackdrop) {
-          this.close(modalBackdrop);
+      this._modalBackdrop.onclick = (e) => {
+        if (e.target === this._modalBackdrop) {
+          this.close();
         }
       };
     }
@@ -101,26 +120,35 @@ function Modal(option = {}) {
     if (this._allowEscapeClose) {
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
-          this.close(modalBackdrop);
+          this.close();
         }
       });
     }
-    return modalBackdrop;
+    return this._modalBackdrop;
   };
-  // hàm sử lý đóng 
-  this.close = (modalBackdrop) => {
-    modalBackdrop.classList.remove("show");
+  // hàm sử lý đóng
+  this.close = (destroy = destroyOnClose) => {
+    this._modalBackdrop.classList.remove("show");
     // lắng nghe khi hết sự kiện transitionend thì remove ra khỏi Dom
-    modalBackdrop.ontransitionend = function () {
-      modalBackdrop.remove();
-    };
+    this._modalBackdrop.addEventListener("transitionend", () => {
+      // nếu this._modalBackdrop khác null / udf và và cho phép hủy thì mới hủy đi
+      if (this._modalBackdrop && destroy) {
+        this._modalBackdrop.remove();
+        this._modalBackdrop = null;
+      }
+    });
     document.body.classList.remove("croll-hidden");
     document.body.style.paddingRight = "";
+  };
+
+  this.destroy = () => {
+    this.close(true);
   };
 }
 
 const modal1 = new Modal({
   templateId: "modal1",
+  destroyOnClose: false,
 });
 
 const btnModal1 = $("#modal-1");
