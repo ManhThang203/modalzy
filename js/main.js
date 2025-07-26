@@ -7,14 +7,14 @@ const modalBackdrop = $$(".modal-backdrop");
 
 function Modal() {
   this.openModal = (option = {}) => {
-    const {templateId} = option;
+    const { templateId, modalElement = true } = option;
     const template = $(`#${templateId}`);
-    
-    if(!template){
-        console.error(`${templateId} không tồn tại`);
-        return
+
+    if (!template) {
+      console.error(`${templateId} không tồn tại`);
+      return;
     }
-    const content  = template.content.cloneNode(true)
+    const content = template.content.cloneNode(true);
 
     // create element
     const modalBackdrop = document.createElement("div");
@@ -46,6 +46,7 @@ function Modal() {
 
     setTimeout(() => {
       modalBackdrop.classList.add("show");
+      document.body.classList.add("croll-hidden");
     }, 500);
 
     modalClose.onclick = () => {
@@ -53,22 +54,26 @@ function Modal() {
     };
 
     modalBackdrop.onclick = (e) => {
-      if (e.target === modalBackdrop) {
-        this.closeModal(modalBackdrop);
+      if (modalElement) {
+        if (e.target === modalBackdrop) {
+          this.closeModal(modalBackdrop);
+        }
       }
     };
 
     document.addEventListener("keydown", (e) => {
-      if ((e.key === "Escape")) {
+      if (e.key === "Escape") {
         this.closeModal(modalBackdrop);
       }
     });
+    return modalBackdrop;
   };
-  
+
   this.closeModal = (modalBackdrop) => {
     modalBackdrop.classList.remove("show");
     modalBackdrop.ontransitionend = function () {
-      modalBackdrop.remove();
+        modalBackdrop.remove();
+        document.body.classList.remove("croll-hidden");
     };
   };
 }
@@ -79,17 +84,29 @@ const btnModal1 = $("#modal-1");
 const btnModal2 = $("#modal-2");
 const btnModal3 = $("#modal-3");
 
-btnModal1.onclick = function(){
-    modal.openModal({
-        templateId: "modal1"
-    });
-}
+btnModal1.onclick = function () {
+  modal.openModal({
+    templateId: "modal1",
+  });
+};
 
-
-// btnModal2.onclick = function(){
-//     modal.openModal("<h1>Manh Thang</h1>");
-// }
-
+btnModal2.onclick = function () {
+  const modalBackdrop = modal.openModal({
+    templateId: "modal2",
+    modalElement: false,
+  });
+  const form = modalBackdrop.querySelector("#login-form");
+  if (form) {
+    form.onsubmit = function (e) {
+      e.preventDefault();
+      const formData = {
+        email: $("#email").value.trim(),
+        passwork: $("#passwork").value.trim(),
+      };
+      console.log(formData);
+    };
+  }
+};
 
 // btnModal3.onclick = function(){
 //     modal.openModal("<h1>Manh Thang</h1>");
